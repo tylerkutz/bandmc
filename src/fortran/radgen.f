@@ -153,12 +153,13 @@ include "tailcom.inc"
       xs=q2/(2.*0.938272*ys*e1)
 
       phil=asin(-vpgen(2)/sqrt(vpgen(1)**2+vpgen(2)**2))
-      print *,'in radgen:e1,Q2,ys,xs',e1,Q2,ys,xs,vpgen
+c      print *,'in radgen:e1,Q2,ys,xs',e1,Q2,ys,xs,vpgen
 c      stop
 
       if(ixytest.ge.0)then
 *     output		 itagen
        if(kill_elas_res.ne.2)then
+        print*, 'Calling itafun...'       
 	call itafun(ys,xs,plrun,pnrun,ixytest,itagen)
        else
 	itagen=0
@@ -170,14 +171,16 @@ c      stop
 c
       if(itagen.ne.0.and.abs(ixytest).ne.2)then
 	iphi=0
+c        print *, 'Calling mpolrad...'
 	call mpolrad(e1,ys,xs,1.,plrun,pnrun,itagen)
 	if(ixytest.eq.1)ixytest=-2
       endif
+c      print *, 'Calling radgam_pol...'
       call radgam_pol(e1,ys,xs,phil,ixytest,itagen,q2tr,anutr)
 
 
 * Perform calculation of VPRAD(*),PhRAD(*)
-
+c      print *, 'Calculating VPRAD, PhRAD...'
       phrad(1)=sngl(dplabg(1))
       phrad(2)=sngl(dplabg(2))
       phrad(3)=sngl(dplabg(3))
@@ -187,7 +190,7 @@ c
       vprad(2)=vpgen(2)-phrad(2)
       vprad(3)=vpgen(3)-phrad(3)
       vprad(4)=vpgen(4)-phrad(4)
-
+c      print *, 'Setting the weight'  
 * set the weight
       if(kill_elas_res.eq.2)then
 	  weight=1.
@@ -842,7 +845,7 @@ include "mcpolrad.inc"
 c      print *,' vacl_my_old=',alfa/pi*suml
 c      print *,' vach_my_old=',alfa/pi*sumh
 c      print *,' vac_my_old=',alfa/pi*sum
-      print *,'in-radgen-deltas call vacpol',y
+c      print *,'in-radgen-deltas call vacpol',y
       sum=vacpol(y)
 c      print *,' vac_my_new=',alfa/pi*sum
 

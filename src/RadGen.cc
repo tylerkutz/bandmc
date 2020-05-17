@@ -7,7 +7,7 @@ using namespace std;
 extern "C" {
 
 	void radgen_init_(int* CTARGET, float* ebeam, int* LST40, int* ixytst);
-	void RADGEN_(float* e1, float* vpgen, float* vprad, float* phrad, float* q2tr, float*anutr, float* weight);
+	void radgen_(float* e1, float* vpgen, float* vprad, float* phrad, float* q2tr, float*anutr, float* weight);
 
 }
 
@@ -32,8 +32,7 @@ RadGen::~RadGen() {
 
 void RadGen::Radiate(float* e1, float* vpgen, float* vprad, float* phrad, float* q2tr, float* anutr, float* weight) {
 
-	cout << "Inside RadGen radiator..." << endl;
-	RADGEN_(e1, vpgen, vprad, phrad, q2tr, anutr, weight);
+	radgen_(e1, vpgen, vprad, phrad, q2tr, anutr, weight);
 
 }
 
