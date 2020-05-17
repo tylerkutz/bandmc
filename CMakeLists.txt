@@ -25,3 +25,15 @@ ROOT_GENERATE_DICTIONARY(
 
 add_executable(bandmc bandmc.cc ${headers} ${sources} GenTreeDict.cxx)
 target_link_libraries(bandmc ${ROOT_LIBRARIES})
+
+set(DAT_FILES upper_momentum_fit.dat lower_momentum_fit.dat)
+
+foreach(_datfile ${DAT_FILES})
+	configure_file(
+    	${PROJECT_SOURCE_DIR}/${_datfile}
+    	${PROJECT_BINARY_DIR}/${_datfile}
+    	COPYONLY
+   	)	
+endforeach()
+
+
