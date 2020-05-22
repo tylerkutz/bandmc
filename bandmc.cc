@@ -1,3 +1,4 @@
+#include "DISGenerator.hh"
 #include "ElectronFiducial.hh"
 #include "Smearing.hh"
 #include "GenTree.hh"
@@ -20,7 +21,7 @@ int main(int argc, char *argv[]) {
 	// Read in arguments
 	if (argc != 4)
 	{
-		cerr << "Wrong number of arguments. Instead use: [/path/to/input/file] [radiation on/off {1,0}] [smearing on/off {1,0}]\n";
+		cerr << "Wrong number of arguments. Instead use: [N events] [radiation on/off {1,0}] [smearing on/off {1,0}]\n";
 		exit(-1);
 	}
 
@@ -28,8 +29,10 @@ int main(int argc, char *argv[]) {
 	double Mp = 0.938272;
 	double eBeam = 10.6;
 
-	TFile* inputFile  = new TFile(argv[1]);
-	TTree* mcTree=(TTree*)inputFile->Get("MCout");
+//	TFile* inputFile  = new TFile(argv[1]);
+//	TTree* mcTree=(TTree*)inputFile->Get("MCout");
+
+	int nEvents = atoi(argv[1]);
 
 	int do_radiate = atoi(argv[2]);
 	int do_smearing = atoi(argv[3]);
@@ -38,18 +41,16 @@ int main(int argc, char *argv[]) {
 	Gen_Particle* electron = new Gen_Particle(); 
 	Gen_Particle* neutron = new Gen_Particle(); 
 
-	ElectronFiducial* fFiducial = new ElectronFiducial("upper_momentum_fit.dat", "lower_momentum_fit.dat");
+	DISGenerator* fDIS = new DISGenerator(); 
+	ElectronFiducial* fFiducial = new ElectronFiducial("./dat/upper_momentum_fit.dat", "./dat/lower_momentum_fit.dat");
 	BAND* fBAND = new BAND();
 	RadGen* fRad = new RadGen();
 	Smearing* fSmear = new Smearing();
 	IO* fIO = new IO(Form("bandmc_out_rad%i_smear%i.root", do_radiate, do_smearing));
 
-	mcTree->SetBranchAddress("event", &event);
+//	mcTree->SetBranchAddress("event", &event);
 
 //	TH2F* hist = new TH2F("hist","", 420, -220, 200, 160, 0, 40);
-
-	int nEvents = mcTree->GetEntries();
-	nEvents = 1000000;
 
 	for (int i = 0; i<nEvents; i++) {
 
@@ -59,7 +60,9 @@ int main(int argc, char *argv[]) {
 
 		fIO->ResetBranches();
 
-		mcTree->GetEntry(i);
+//		mcTree->GetEntry(i);
+
+		fDIS->GenerateEvent(event);		
 
 		// Electron info
 		electron = &event->particles[0];

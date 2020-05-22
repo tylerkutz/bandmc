@@ -18,15 +18,15 @@ include_directories(${CMAKE_SOURCE_DIR}/include ${ROOT_INCLUDE_DIRS})
 
 
 ROOT_GENERATE_DICTIONARY(
-    GenTreeDict                         # path to dictionary to generate
+    bandmcDict                         # path to dictionary to generate
     ${CMAKE_SOURCE_DIR}/include/GenTree.hh         # list of classes to process
     LINKDEF ${CMAKE_SOURCE_DIR}/include/LinkDef.hh  # ROOT linkDef file
 )
 
-add_executable(bandmc bandmc.cc ${headers} ${sources} GenTreeDict.cxx)
-target_link_libraries(bandmc ${ROOT_LIBRARIES})
+add_executable(bandmc bandmc.cc ${headers} ${sources} bandmcDict.cxx)
+target_link_libraries(bandmc ${ROOT_LIBRARIES} Foam)
 
-set(DAT_FILES upper_momentum_fit.dat lower_momentum_fit.dat)
+set(DAT_FILES dat/upper_momentum_fit.dat dat/lower_momentum_fit.dat dat/a09.dsfs_lNNC dat/a09.sfs_lNNC)
 
 foreach(_datfile ${DAT_FILES})
 	configure_file(
