@@ -3,6 +3,7 @@
 #include "TString.h"
 #include "TFile.h"
 #include "TTree.h"
+#include "TVector3.h"
 
 #include <unistd.h>
 
@@ -13,6 +14,13 @@ IO::IO(TString filename) {
 	fFile = new TFile(filename, "RECREATE");
 	
 	InitializeTree();
+
+	nMult = 1;
+
+}
+
+IO::~IO() {
+
 
 }
 
@@ -56,10 +64,10 @@ void IO::InitializeTree() {
 	fTree->Branch("phi_q",		&phi_q,		"phi_q/D");
 	fTree->Branch("nu",		&nu,		"nu/D");
 	fTree->Branch("nMult",		&nMult,		"nMult/I");
-	fTree->Branch("barID",		&barID,		"barID[nMult]/D");
-	fTree->Branch("dL_n",		&dL_n,		"dL_n[nMult]/D");
-	fTree->Branch("nTime",		&nTime,		"nTime[nMult]/D");
-	fTree->Branch("nEdep",		&nEdep,		"nEdep[nMult]/D");
+	fTree->Branch("barID",		&barID,		"barID/D");
+	fTree->Branch("dL_n",		&dL_n,		"dL_n/D");
+	fTree->Branch("nTime",		&nTime,		"nTime/D");
+	fTree->Branch("nEdep",		&nEdep,		"nEdep/D");
 	
 }
 

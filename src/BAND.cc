@@ -1,16 +1,50 @@
 #include "BAND.hh"
 
 #include "TMath.h"
+#include "TRandom3.h"
 
 #include <math.h>
 
+#include <iostream>
+
+using namespace std;
+
 BAND::BAND() {
+
+	fRand = new TRandom3(0);
+
 }
 
 BAND::~BAND(){
 }
 
-double BAND::GetNeutronAcceptance(double theta, double phi, double z_m) {
+
+double BAND::GetNeutronAcceptance(double theta, double phi, double pNeutron, double z_m) {
+
+	double p2B = PointsToBAND(theta, phi, z_m);
+	double nEff = Efficiency(pNeutron);
+
+	return p2B*nEff;
+
+}
+
+double BAND::Efficiency(double p) {
+
+	double eff = 0.;
+
+	if (p > 0.2) {
+		eff = 2.5*p*p - 3.*p + 1.19375;
+	}
+
+	if(fRand->Uniform() < eff) {
+		return 1.0;
+	} else {
+		return 0.0;
+	}
+
+}
+
+double BAND::PointsToBAND(double theta, double phi, double z_m) {
 
         //double z = z_m*100; // from m to cm
 	double z = z_m;
@@ -58,3 +92,6 @@ double BAND::GetNeutronAcceptance(double theta, double phi, double z_m) {
  	return 0.0;
 
 }
+
+
+

@@ -132,45 +132,26 @@ void DISGenerator::GenerateEvent(Gen_Event* thisEvent) {
 
 }
 
+void DISGenerator::GenerateBackground(Gen_Event* bgEvent) {
+
+	bgEvent->particles.clear();
+
+	Gen_Event* eEvent = new Gen_Event();
+	Gen_Event* nEvent = new Gen_Event();
+
+	GenerateEvent(eEvent);
+	GenerateEvent(nEvent);
+
+	bgEvent->particles.push_back(eEvent->particles[0]);
+	bgEvent->particles.push_back(nEvent->particles[1]);
+
+}
+
 void DISGenerator::GetTotalCS(double* totalCS) {
 
 	csFoam->GetIntegMC(totalCS[0],totalCS[1]);
 
 }
-
-/*
-void DISGenerator::SetDIS() {
-
-	if(! fDIS) {
-		cerr << "Can't set DIS variables before creating fDIS!" << endl;
-	       	exit(-1);	
-	}
-
-	fDIS->sigmainput = sigmainput;        
-	fDIS->betainput = betainput;         
-	fDIS->epsinput = epsinput;          
-	fDIS->lambdainput = lambdainput;
-	fDIS->betaoffinput = betaoffinput;
-	fDIS->offshellset = offshellset;       
-	fDIS->symm = symm;              
-	fDIS->phiavg = phiavg;            
-	fDIS->F_param = F_param;           
-
-	// Foam ranges
-	fDIS->min_theta_e = min_theta_e; 
-	fDIS->max_theta_e = max_theta_e;
-	fDIS->min_p_e = min_p_e; 	   
-	fDIS->max_p_e = max_p_e; 	   
-
-	fDIS->min_theta_r = min_theta_r; 
-	fDIS->max_theta_r = max_theta_r;
-	fDIS->min_p_r = min_p_r; 	   
-	fDIS->max_p_r = max_p_r; 	   
-
-	fDIS->min_phi_r = min_phi_r;   
-	fDIS->max_phi_r = max_phi_r;   
-}
-*/
 
 double disCS::Density(int nDim, double *args){
 	// Parameters

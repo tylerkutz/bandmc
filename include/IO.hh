@@ -4,16 +4,18 @@
 class TString;
 class TFile;
 class TTree;
+class TVector3;
 
 class IO{
 
 public:
 	IO(TString);
 	~IO();
-	
+
 	void FillTree();
 	void WriteTree();
 	void ResetBranches();
+
 
 	double p_e; 		
 	double theta_e; 	
