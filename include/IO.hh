@@ -53,9 +53,16 @@ public:
 	double nMult;		
 	double barID;		
 	double dL_n;		
+	double nBeta;		
 	double nTime;		
 	double nEdep;		
 
+	double CosTheta_nq;
+	double Xp;
+	double Wp;
+	double As;
+	
+	int bg;
 
 private:
 

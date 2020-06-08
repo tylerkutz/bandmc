@@ -32,8 +32,10 @@ double BAND::Efficiency(double p) {
 
 	double eff = 0.;
 
-	if (p > 0.2) {
-		eff = 2.5*p*p - 3.*p + 1.19375;
+	if (p >= 0.25) {
+		eff = 1.01987603*p*p - 1.04845899*p + 0.54314284;
+	} else if (p < 0.25) {
+		eff = 2.85089575*p - 0.28441173;
 	}
 
 	if(fRand->Uniform() < eff) {

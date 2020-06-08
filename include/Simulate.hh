@@ -47,6 +47,7 @@ private:
 	double Me;
 	double Mp;
 	double Mn;
+	double MD;
 	double eBeam;
 	double c;
 
@@ -91,9 +92,13 @@ private:
 	double barID;		
 	double dL_n;		
 	double nTime;		
+	double nBeta;
 	double nEdep;		
-
-
+	int bg;
+	double CosTheta_nq;
+	double Xp;
+	double Wp;
+	double As;
 
 };
 

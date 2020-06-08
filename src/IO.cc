@@ -66,9 +66,16 @@ void IO::InitializeTree() {
 	fTree->Branch("nMult",		&nMult,		"nMult/I");
 	fTree->Branch("barID",		&barID,		"barID/D");
 	fTree->Branch("dL_n",		&dL_n,		"dL_n/D");
+	fTree->Branch("nBeta",		&nBeta,		"nBeta/D");
 	fTree->Branch("nTime",		&nTime,		"nTime/D");
 	fTree->Branch("nEdep",		&nEdep,		"nEdep/D");
-	
+	fTree->Branch("bg",		&bg,		"bg/I");
+	fTree->Branch("CosTheta_nq",	&CosTheta_nq,	"CosTheta_nq/D");
+	fTree->Branch("Xp",		&Xp,		"Xp/D");
+	fTree->Branch("Wp",		&Wp,		"Wp/D");
+	fTree->Branch("As",		&As,		"As/D");
+
+
 }
 
 
@@ -133,7 +140,14 @@ void IO::ResetBranches() {
 	nMult = 0;		
 	barID = 0;		
 	dL_n = 0;		
+	nBeta = 0;
 	nTime = 0;		
 	nEdep = 0;		
+	bg = -1;
+	CosTheta_nq = 0;
+	Xp = 0;
+	Wp = 0;
+	As = 0;
+
 
 }

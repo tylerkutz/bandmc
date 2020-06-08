@@ -1,4 +1,5 @@
 #include "DISGenerator.hh"
+#include "RandomGenerator.hh"
 #include "GenTree.hh"
 #include "IO.hh"
 #include "Simulate.hh"
@@ -34,6 +35,7 @@ int main(int argc, char *argv[]) {
 	IO* fIO = new IO(Form("bandmc_out_rad%i_smear%i.root", doRadiation, doSmearing));
 
 	DISGenerator* fDIS = new DISGenerator(); 
+	RandomGenerator* fBG = new RandomGenerator();
 	Simulate* fSim = new Simulate(doRadiation, doSmearing);
 
 	fSim->SetIO(fIO);
@@ -41,23 +43,29 @@ int main(int argc, char *argv[]) {
 	int nSim = 0;
 	int nBG = 0;
 
-	while (nSim < nEvents || nBG < nBackg) {
+	while (nSim < nEvents) {
 
-		if(nSim%100==0) {
-			cout << nSim << "/" << nEvents << endl;
+		if(nSim%10==0) {
+			cout << "Signal: " << nSim << "/" << nEvents << endl;
 		}
-
-		if(nSim < nEvents) {
-			fDIS->GenerateEvent(event);		
-			nSim = fSim->SimulateEvent(event->particles[0].momentum, event->particles[1].momentum);
-		}
-
-		if(nBG < nBackg) {
-			fDIS->GenerateBackground(backg);
-			nBG = fSim->SimulateBackground(backg->particles[0].momentum, backg->particles[1].momentum);
-		}
+		fDIS->GenerateEvent(event);		
+		nSim = fSim->SimulateEvent(event->particles[0].momentum, event->particles[1].momentum);
 
 	}
+
+
+	while (nBG < nBackg) {
+
+		if(nBG%10==0) {
+			cout << "Background: " << nBG << "/" << nBackg << endl;
+		}
+		fBG->GenerateRandom(backg);
+		nBG = fSim->SimulateBackground(backg->particles[0].momentum, backg->particles[1].momentum);
+
+	}
+
+
+
 
 	fIO->WriteTree();
 
