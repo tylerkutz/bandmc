@@ -78,7 +78,7 @@ int Simulate::SimulateEvent(TVector3 electron, TVector3 neutron) {
 		p_n = neutron.Mag();
 		theta_n = neutron.Theta()*TMath::RadToDeg();
 		phi_n = neutron.Phi()*TMath::RadToDeg();
-		double E_n = sqrt(Mn*Mn + p_n*p_n );
+		E_n = sqrt(Mn*Mn + p_n*p_n );
 
 		double nGamma2 = 1. + (p_n/Mn)*(p_n/Mn);
 		nBeta = sqrt(1. - 1./nGamma2);
@@ -193,14 +193,14 @@ int Simulate::SimulateBackground(TVector3 electron, TVector3 neutron) {
 		p_n = neutron.Mag();
 		theta_n = neutron.Theta()*TMath::RadToDeg();
 		phi_n = neutron.Phi()*TMath::RadToDeg();
-		double E_n = sqrt(Mn*Mn + p_n*p_n );
+		E_n = sqrt(Mn*Mn + p_n*p_n );
 
 		double nGamma2 = 1. + (p_n/Mn)*(p_n/Mn);
 		nBeta = sqrt(1. - 1./nGamma2);
 		double nv = nBeta*c;
 		double dZ_n = -fRand->Uniform(zDown + vz, zUp + vz);  
 		dL_n = dZ_n/cos(neutron.Theta()); 	
-		nTime = fRand->Gaus(fRand->Uniform(-20., 340.), 5.);
+		nTime = fRand->Gaus(fRand->Uniform(-50., 350.), 5.);
 
 		// Unradiated photon info
 		TVector3 k0 = TVector3(0.,0.,sqrt(eBeam*eBeam - Me*Me));
@@ -293,6 +293,7 @@ void Simulate::SetData() {
 	fIO->p_n = p_n;
 	fIO->theta_n = theta_n;
 	fIO->phi_n = phi_n;
+	fIO->E_n = E_n;
 	fIO->Q2 = Q2;
 	fIO->xB = xB;
 	fIO->W2 = W2;

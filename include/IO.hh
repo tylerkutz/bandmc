@@ -23,6 +23,7 @@ public:
 	double p_n;		
 	double theta_n;	
 	double phi_n;		
+	double E_n;
 	double Q2;		
 	double xB;		
 	double W2;		
