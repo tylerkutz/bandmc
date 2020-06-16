@@ -2,6 +2,8 @@ bandmc: Fast Monte Carlo for BAND
 
 Uses deuterium tagged DIS generator from Wim Cosyn
 
+USER MUST SUPPLY INCLUSIVE ELECTRON SKIM ROOT FILE (SEE "REQUIRED DATA FILES" BELOW)
+
 ## Compiling 
 
 In directory with "bandmc" repository:
@@ -21,4 +23,5 @@ $ ./bandmc [N events] [N background] [radiation on/off {1,0}] [smearing on/off {
 
 1. Data tables for generator (included in repository).
 
-2. Inclusive electron skim ROOT file
+2. Inclusive electron skim ROOT file (NOT INCLUDED IN REPOSITORY).  You must move an inclusive electron skim ROOT file named "band_inclusive.root" to build/dat/
+ 
