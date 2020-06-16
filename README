@@ -1,0 +1,24 @@
+bandmc: Fast Monte Carlo for BAND
+
+Uses deuterium tagged DIS generator from Wim Cosyn
+
+## Compiling 
+
+In directory with "bandmc" repository:
+
+$ mkdir build
+$ ls
+bandmc  build
+$ cd build
+$ cmake ../bandmc
+$ make
+
+## Running
+
+$ ./bandmc [N events] [N background] [radiation on/off {1,0}] [smearing on/off {1,0}]
+
+## Required data files
+
+1. Data tables for generator (included in repository).
+
+2. Inclusive electron skim ROOT file
