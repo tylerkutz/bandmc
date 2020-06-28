@@ -45,7 +45,7 @@ double max_p_e = Ebeam-1;
 
 double min_theta_r =155.*M_PI/180.;
 double max_theta_r =180.*M_PI/180.;
-double min_p_r =0.200;
+double min_p_r =0.100;
 double max_p_r =0.650;
 
 double min_phi_r=0.;
