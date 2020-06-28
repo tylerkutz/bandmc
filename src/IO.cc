@@ -38,6 +38,9 @@ void IO::InitializeTree() {
 	fTree->Branch("phi_n",		&phi_n,		"phi_n/D");
 	fTree->Branch("E_n",		&E_n,		"E_n/D");
 	fTree->Branch("Q2",		&Q2,		"Q2/D");
+	fTree->Branch("Q2rad",		&Q2rad,		"Q2rad/D");
+	fTree->Branch("Q2true",		&Q2true,	"Q2true/D");
+	fTree->Branch("radweight",	&radweight,	"radweight/D");
 	fTree->Branch("xB",		&xB,		"xB/D");		
 	fTree->Branch("W2",		&W2,		"W2/D");
 	fTree->Branch("Ebeam",		&Ebeam,		"Ebeam/D");
@@ -113,6 +116,8 @@ void IO::ResetBranches() {
 	phi_n = 0;
 	E_n = 0;	
 	Q2 = 0;		
+	Q2rad = 0;		
+	Q2true = 0;
 	xB = 0;		
 	W2 = 0;		
 	Ebeam = 0;		
@@ -150,6 +155,6 @@ void IO::ResetBranches() {
 	Xp = 0;
 	Wp = 0;
 	As = 0;
-
+	radweight=0.;
 
 }

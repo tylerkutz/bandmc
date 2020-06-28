@@ -63,6 +63,8 @@ private:
 	double phi_n;		
 	double E_n;
 	double Q2;		
+	double Q2rad;		
+	double Q2true;		
 	double xB;		
 	double W2;		
 	double Ebeam;		
@@ -100,6 +102,8 @@ private:
 	double Xp;
 	double Wp;
 	double As;
+
+	double radweight;
 
 };
 

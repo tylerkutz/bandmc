@@ -58,11 +58,12 @@ Simulate::~Simulate() {
 int Simulate::SimulateEvent(TVector3 electron, TVector3 neutron) {
 
 		fIO->ResetBranches();
-
+		
 		bg = 0;
 
 		// Vertex info
-		double vz = fRand->Uniform(-targetL/2., targetL/2.);
+//		double vz = fRand->Uniform(-targetL/2., targetL/2.);
+		double vz = 0.;
 
 		// Electron info
 		double px_e = electron.x();
@@ -84,6 +85,7 @@ int Simulate::SimulateEvent(TVector3 electron, TVector3 neutron) {
 		nBeta = sqrt(1. - 1./nGamma2);
 		double nv = nBeta*c;
 		double dZ_n = -fRand->Uniform(zDown + vz, zUp + vz);  
+//		double dZ_n = -(zDown + zUp) / 2.;
 		dL_n = dZ_n/cos(neutron.Theta()); 	
 		nTime = 1.e9*(dL_n/100.)/nv;		// convert dL_n to meters first, give time in ns 
 
@@ -121,17 +123,19 @@ int Simulate::SimulateEvent(TVector3 electron, TVector3 neutron) {
 		float vpgen[4] = {(float)q.x(), (float)q.y(), (float)q.z(), (float)nu};
 		float vprad[4];
 		float rprad[4];
-		float Q2true;
+		float q2tr;
 		float Utrue;
 		float weight;
 
 		if (doRadiation) {
 			float ebf = (float)eBeam;	
-			fRad->Radiate(&ebf, vpgen, vprad, rprad, &Q2true, &Utrue, &weight); 
-			Q2 = Q2true;
+			fRad->Radiate(&ebf, vpgen, vprad, rprad, &q2tr, &Utrue, &weight); 
 			q = TVector3(vprad[0], vprad[1], vprad[2]);
+			Q2true = q2tr;
+			Q2rad = q.Mag()*q.Mag() - Utrue*Utrue;
 			theta_q = q.Theta();
 			phi_q = q.Phi();			
+			radweight = weight;
 		}
 
 		// Smear detected electron
@@ -177,7 +181,8 @@ int Simulate::SimulateBackground(TVector3 electron, TVector3 neutron) {
 		bg = 1;
 
 		// Vertex info
-		double vz = fRand->Uniform(-targetL/2., targetL/2.);
+//		double vz = fRand->Uniform(-targetL/2., targetL/2.);
+		double vz = 0.;
 
 		// Electron info
 		double px_e = electron.x();
@@ -199,8 +204,9 @@ int Simulate::SimulateBackground(TVector3 electron, TVector3 neutron) {
 		nBeta = sqrt(1. - 1./nGamma2);
 		double nv = nBeta*c;
 		double dZ_n = -fRand->Uniform(zDown + vz, zUp + vz);  
+//		double dZ_n = -(zDown + zUp) / 2.;
 		dL_n = dZ_n/cos(neutron.Theta()); 	
-		nTime = fRand->Gaus(fRand->Uniform(-50., 350.), 5.);
+		nTime = fRand->Gaus(fRand->Uniform(-65., 350.), 5.);
 
 		// Unradiated photon info
 		TVector3 k0 = TVector3(0.,0.,sqrt(eBeam*eBeam - Me*Me));
@@ -295,6 +301,8 @@ void Simulate::SetData() {
 	fIO->phi_n = phi_n;
 	fIO->E_n = E_n;
 	fIO->Q2 = Q2;
+	fIO->Q2rad = Q2rad;
+	fIO->Q2true = Q2true;
 	fIO->xB = xB;
 	fIO->W2 = W2;
 	fIO->eBeta = eBeta;
@@ -309,6 +317,7 @@ void Simulate::SetData() {
 	fIO->Xp = Xp;
 	fIO->Wp = Wp;
 	fIO->As = As;
+	fIO->radweight = radweight;
 
 }
 
