@@ -2,6 +2,7 @@
 #define BAND_HH
 
 class TRandom3;
+class TF1;
 
 class BAND{
 
@@ -17,6 +18,7 @@ private:
 	double PointsToBAND(double, double, double);
 
 	TRandom3* fRand;	
+	TF1* nEffFunc;
 
 };
 

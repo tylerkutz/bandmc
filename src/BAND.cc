@@ -2,6 +2,7 @@
 
 #include "TMath.h"
 #include "TRandom3.h"
+#include "TF1.h"
 
 #include <math.h>
 
@@ -12,6 +13,18 @@ using namespace std;
 BAND::BAND() {
 
 	fRand = new TRandom3(0);
+
+	nEffFunc = new TF1("nEffFunc", "2.5*pol6", 0.1, 0.65);
+	double funcPars[] = {	-1.33158116e+00,
+				2.59593847e+01, 
+				-1.81677059e+02,  
+				6.77091502e+02, 
+				-1.35907420e+03,  
+				1.37637068e+03, 
+				-5.50389370e+02}; // 5 MeV threshold
+
+	nEffFunc->SetParameters(funcPars);
+
 
 }
 
@@ -32,10 +45,12 @@ double BAND::Efficiency(double p) {
 
 	double eff = 0.;
 
-	if (p >= 0.25) {
-		eff = 1.01987603*p*p - 1.04845899*p + 0.54314284;
-	} else if (p < 0.25) {
-		eff = 2.85089575*p - 0.28441173;
+	if(p < 0.1) {
+		eff = 0.;
+	} else if (p > 0.65) {
+		eff = 0.3;
+	} else {
+		eff = nEffFunc->Eval(p);
 	}
 
 	if(fRand->Uniform() < eff) {
