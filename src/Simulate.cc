@@ -206,7 +206,7 @@ int Simulate::SimulateBackground(TVector3 electron, TVector3 neutron) {
 		double dZ_n = -fRand->Uniform(zDown + vz, zUp + vz);  
 //		double dZ_n = -(zDown + zUp) / 2.;
 		dL_n = dZ_n/cos(neutron.Theta()); 	
-		nTime = fRand->Gaus(fRand->Uniform(-65., 350.), 5.);
+		nTime = fRand->Gaus(fRand->Uniform(-60., 330.), 8.5);
 
 		// Unradiated photon info
 		TVector3 k0 = TVector3(0.,0.,sqrt(eBeam*eBeam - Me*Me));
