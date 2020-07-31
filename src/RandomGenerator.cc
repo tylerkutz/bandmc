@@ -12,12 +12,15 @@ using namespace std;
 
 RandomGenerator::RandomGenerator() {
 
-	minTrueKE = 0;
+	minTrueKE = 0.015;
 	maxTrueKE = 1.; 
 	minMomR = 0.2;
-	maxMomR = 0.6;
+	maxMomR = 0.65;
+
 	maxThetaR = 178.*M_PI/180.;
 	minThetaR = 150.*M_PI/180.;
+
+
 	bandZ = -267; // cm
 
 	fRand = new TRandom3(0);
@@ -31,8 +34,8 @@ RandomGenerator::RandomGenerator() {
 	timeWindow = maxTime - minTime;
 	BAND_center =  bandZ - (7.2*5)/2.;
 
-	inclFile = new TFile("dat/band_inclusive.root");
-	inclTree = (TTree*)inclFile->Get("skim");
+	inclFile = new TFile("dat/inclusive_sample_background.root");
+	inclTree = (TTree*)inclFile->Get("T");
 
 	inclTree->SetBranchAddress("p_e", 	&p_e);
 	inclTree->SetBranchAddress("theta_e", 	&theta_e);
@@ -41,6 +44,8 @@ RandomGenerator::RandomGenerator() {
 	nBGSamp = inclTree->GetEntries();
 
 	nBG = 0; 
+
+	step = fRand->Integer(100);
 
 }
 
@@ -60,7 +65,7 @@ void RandomGenerator::GenerateRandom(Gen_Event* thisEvent) {
 	
 	// Need to get electron info from inclusive skim
 	inclTree->GetEntry(nBG);
-	nBG++;
+	nBG += step;
 	nBG = nBG%nBGSamp;
 
 	// Electron info

@@ -51,7 +51,7 @@ private:
 
 	int nBGSamp;
 	int nBG;
-	
+	int step;	
 
 
 };
