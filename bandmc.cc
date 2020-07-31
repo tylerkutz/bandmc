@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 
 	while (nSim < nEvents) {
 
-		if(nSim%10==0) {
+		if(nSim%100==0) {
 			cout << "Signal: " << nSim << "/" << nEvents << endl;
 		}
 		fDIS->GenerateEvent(event);		
@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 
 	while (nBG < nBackg) {
 
-		if(nBG%10==0) {
+		if(nBG%100==0) {
 			cout << "Background: " << nBG << "/" << nBackg << endl;
 		}
 		fBG->GenerateRandom(backg);

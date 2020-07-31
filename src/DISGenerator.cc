@@ -43,14 +43,22 @@ double max_theta_e = 40.*M_PI/180.;
 double min_p_e = 2.;
 double max_p_e = Ebeam-1;
 
+
 double min_theta_r =155.*M_PI/180.;
 double max_theta_r =180.*M_PI/180.;
 double min_p_r =0.200;
 double max_p_r =0.650;
-
 double min_phi_r=0.;
 double max_phi_r=2.*M_PI;
 
+/*
+double min_theta_r =160.*M_PI/180.;
+double max_theta_r =160.*M_PI/180.;
+double min_p_r =0.350;
+double max_p_r =0.350;
+double min_phi_r=M_PI;
+double max_phi_r=M_PI;
+*/
 
 DISGenerator::DISGenerator() {
 

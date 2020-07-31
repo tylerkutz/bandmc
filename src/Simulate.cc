@@ -194,19 +194,38 @@ int Simulate::SimulateBackground(TVector3 electron, TVector3 neutron) {
 		double E_e = sqrt(p_e*p_e + Me*Me );
 		eTime = 0;
 
+	
 		// Neutron info
-		p_n = neutron.Mag();
+
+		// Use generated neutron momentum for Edep ONLY
+		double p_n_gen = neutron.Mag(); 
+		nEdep = fBAND->GetEdep(p_n_gen);
+
+		// Now use neutron angles and TOF to get momentum
 		theta_n = neutron.Theta()*TMath::RadToDeg();
 		phi_n = neutron.Phi()*TMath::RadToDeg();
-		E_n = sqrt(Mn*Mn + p_n*p_n );
-
-		double nGamma2 = 1. + (p_n/Mn)*(p_n/Mn);
-		nBeta = sqrt(1. - 1./nGamma2);
-		double nv = nBeta*c;
 		double dZ_n = -fRand->Uniform(zDown + vz, zUp + vz);  
 //		double dZ_n = -(zDown + zUp) / 2.;
 		dL_n = dZ_n/cos(neutron.Theta()); 	
 		nTime = fRand->Gaus(fRand->Uniform(-60., 330.), 8.5);
+		nBeta = (dL_n/100.)/(c*nTime*1.e-9);
+		p_n = Mn / sqrt( 1./pow(nBeta,2) - 1. );
+		E_n = sqrt(Mn*Mn + p_n*p_n );
+
+		/*
+		// Neutron info
+		p_n = neutron.Mag();
+		E_n = sqrt(Mn*Mn + p_n*p_n );
+		theta_n = neutron.Theta()*TMath::RadToDeg();
+		phi_n = neutron.Phi()*TMath::RadToDeg();
+		double dZ_n = -fRand->Uniform(zDown + vz, zUp + vz);  
+		dL_n = dZ_n/cos(neutron.Theta()); 	
+		nTime = fRand->Gaus(fRand->Uniform(-60., 330.), 8.5);
+		double pn_mc2 = (p_n/Mn)*(p_n/Mn);
+                nBeta = sqrt(pn_mc2 / (1. + pn_mc2));
+		nEdep = fBAND->GetEdep(p_n);
+		*/
+
 
 		// Unradiated photon info
 		TVector3 k0 = TVector3(0.,0.,sqrt(eBeam*eBeam - Me*Me));
@@ -278,8 +297,9 @@ int Simulate::SimulateBackground(TVector3 electron, TVector3 neutron) {
 		// Check acceptance for electron, neutron
 		double acc_e = fFiducial->GetElectronAcceptance(theta_e, phi_e, p_e);
 		double acc_n = fBAND->GetNeutronAcceptance(theta_n, phi_n, p_n, vz);
+		double p2b = fBAND->PointsToBAND(theta_n, phi_n, vz);
 
-		if (acc_e > 0.5 && acc_n > 0.5) {
+		if (acc_e > 0.5 && p2b > 0.5) {
 			
 			SetData();
 			fIO->FillTree();
@@ -300,6 +320,7 @@ void Simulate::SetData() {
 	fIO->theta_n = theta_n;
 	fIO->phi_n = phi_n;
 	fIO->E_n = E_n;
+	fIO->nEdep = nEdep;
 	fIO->Q2 = Q2;
 	fIO->Q2rad = Q2rad;
 	fIO->Q2true = Q2true;

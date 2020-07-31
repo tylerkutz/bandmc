@@ -76,7 +76,7 @@ include "mcpolrad.inc"
       ELSE
 	 plrun = 0.
 	 pnrun = 0.
-	 tname='xytab0unp.dat'
+	 tname='dat/xytab2unp.dat'
       ENDIF
       write(tname(6:6),'(i1)')ire
 
