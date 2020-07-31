@@ -3,6 +3,8 @@
 
 class TRandom3;
 class TF1;
+class TH1F;
+class TFile;
 
 class BAND{
 
@@ -10,15 +12,18 @@ public:
 	BAND();
 	~BAND();
 	double GetNeutronAcceptance(double, double, double, double);
-
+	double PointsToBAND(double, double, double);
+	double Efficiency(double);
+	double GetEdep(double);
 
 private:
-
-	double Efficiency(double);
-	double PointsToBAND(double, double, double);
-
 	TRandom3* fRand;	
 	TF1* nEffFunc;
+
+	TFile* edepFile;
+	double dist_p_n[12];
+	double bound_p_n[13];
+	TH1F* edep_dist[12];
 
 };
 

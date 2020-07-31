@@ -37,6 +37,7 @@ void IO::InitializeTree() {
 	fTree->Branch("theta_n",	&theta_n,	"theta_n/D");
 	fTree->Branch("phi_n",		&phi_n,		"phi_n/D");
 	fTree->Branch("E_n",		&E_n,		"E_n/D");
+	fTree->Branch("nEdep",		&nEdep,		"nEdep/D");
 	fTree->Branch("Q2",		&Q2,		"Q2/D");
 	fTree->Branch("Q2rad",		&Q2rad,		"Q2rad/D");
 	fTree->Branch("Q2true",		&Q2true,	"Q2true/D");
@@ -115,6 +116,7 @@ void IO::ResetBranches() {
 	theta_n = 0;	
 	phi_n = 0;
 	E_n = 0;	
+	nEdep = 0.;
 	Q2 = 0;		
 	Q2rad = 0;		
 	Q2true = 0;

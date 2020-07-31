@@ -3,6 +3,8 @@
 #include "TMath.h"
 #include "TRandom3.h"
 #include "TF1.h"
+#include "TH1F.h"
+#include "TFile.h"
 
 #include <math.h>
 
@@ -25,6 +27,18 @@ BAND::BAND() {
 
 	nEffFunc->SetParameters(funcPars);
 
+	edepFile = new TFile("./dat/edep_dist.root");
+
+	double pTemp[12] = {100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650}; 
+	bound_p_n[0] = 0.075;
+
+	for(int i = 0; i < 12; i++) {
+
+		dist_p_n[i] = pTemp[i];
+		bound_p_n[i+1] = (pTemp[i]+25.)/1000.;
+		edep_dist[i] = (TH1F*)edepFile->Get(Form("edep%i", (int)dist_p_n[i]));
+
+	}
 
 }
 
@@ -110,5 +124,29 @@ double BAND::PointsToBAND(double theta, double phi, double z_m) {
 
 }
 
+
+double BAND::GetEdep(double p_n) {
+
+	int ip = 0;
+
+	if(p_n < bound_p_n[0]) {
+		ip = 0;
+	} else if (p_n > bound_p_n[12]) {
+		ip = 11;
+	} else {
+		while (ip < 12) {
+			if (p_n >= bound_p_n[ip] && p_n < bound_p_n[ip+1]) {
+				break;
+			}	
+			ip++;
+		}
+	}
+
+	double E_dep = edep_dist[ip]->GetRandom();
+
+	return E_dep;
+
+
+}
 
 

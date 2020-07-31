@@ -26,7 +26,7 @@ ROOT_GENERATE_DICTIONARY(
 add_executable(bandmc bandmc.cc ${headers} ${sources} bandmcDict.cxx)
 target_link_libraries(bandmc ${ROOT_LIBRARIES} Foam)
 
-set(DAT_FILES dat/upper_momentum_fit.dat dat/lower_momentum_fit.dat dat/a09.dsfs_lNNC dat/a09.sfs_lNNC)
+set(DAT_FILES dat/upper_momentum_fit.dat dat/lower_momentum_fit.dat dat/a09.dsfs_lNNC dat/a09.sfs_lNNC dat/edep_dist.root)
 
 foreach(_datfile ${DAT_FILES})
 	configure_file(
