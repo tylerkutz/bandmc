@@ -1,16 +1,22 @@
-#ifndef EFIDUCIAL_HH
-#define EFIDUCIAL_HH
+#ifndef CLAS_HH
+#define CLAS_HH
 
 class TString;
 class TF1;
+class TLorentzVector;
+class TRandom3;
 
-class ElectronFiducial{
+class CLAS{
 
 public:
-	ElectronFiducial(TString, TString);
-	~ElectronFiducial();
+
+	CLAS();
+	~CLAS();
 
 	double GetElectronAcceptance(double, double, double);
+	void Smear(TLorentzVector *V4, int q); 
+	void SmearCD(TLorentzVector *V4, int q); 
+
 
 private:
 
@@ -26,6 +32,9 @@ private:
 
 	TF1* fiducialFunction[2][6];
 	TF1* momentumFunction[2][6][3];
+
+	TRandom3 *fRand;
 };
 
 #endif
+

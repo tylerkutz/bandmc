@@ -7,9 +7,8 @@ class TVector3;
 class TRandom3;
 
 class RadGen;
-class Smearing;
 class IO;
-class ElectronFiducial;
+class CLAS;
 class BAND;
 
 class Simulate{
@@ -35,9 +34,8 @@ private:
 	double zDown;
 
 	RadGen* fRad;
-	Smearing* fSmear;
 	IO* fIO;	
-	ElectronFiducial* fFiducial;
+	CLAS* fCLAS;
 	BAND* fBAND;
 
 	TRandom3* fRand;

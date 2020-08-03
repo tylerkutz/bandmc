@@ -1,8 +1,7 @@
 #include "Simulate.hh"
 #include "RadGen.hh"
-#include "Smearing.hh"
 #include "IO.hh"
-#include "ElectronFiducial.hh"
+#include "CLAS.hh"
 #include "BAND.hh"
 
 #include "TVector3.h"
@@ -17,8 +16,9 @@ Simulate::Simulate(int do_radiate, int do_smear) {
 	doSmearing = do_smear;
 
 	fRad = new RadGen();
-	fSmear = new Smearing();
-	fFiducial = new ElectronFiducial("./dat/upper_momentum_fit.dat", "./dat/lower_momentum_fit.dat");
+
+	fCLAS = new CLAS();
+
 	fBAND = new BAND();
 	
 	fRand = new TRandom3(0);
@@ -47,8 +47,7 @@ Simulate::Simulate(int do_radiate, int do_smear) {
 Simulate::~Simulate() {
 
 	delete fRad;
-	delete fSmear;
-	delete fFiducial;
+	delete fCLAS;
 	delete fBAND;
 	delete fIO;
 	delete fRand;
@@ -142,7 +141,7 @@ int Simulate::SimulateEvent(TVector3 electron, TVector3 neutron) {
 //		cout << "before " << p_e << endl;
 		e4.SetPxPyPzE(px_e, py_e, pz_e, E_e);
 		if(doSmearing) {
-			fSmear->smear(&e4, 0);
+			fCLAS->Smear(&e4, 0);
 		}
 		p_e = e4.Vect().Mag();
 //		cout << "after " << p_e << endl;
@@ -159,7 +158,7 @@ int Simulate::SimulateEvent(TVector3 electron, TVector3 neutron) {
 
 
 		// Check acceptance for electron, neutron
-		double acc_e = fFiducial->GetElectronAcceptance(theta_e, phi_e, p_e);
+		double acc_e = fCLAS->GetElectronAcceptance(theta_e, phi_e, p_e);
 		double acc_n = fBAND->GetNeutronAcceptance(theta_n, phi_n, p_n, vz);
 
 		if (acc_e > 0.5 && acc_n > 0.5) {
@@ -278,7 +277,7 @@ int Simulate::SimulateBackground(TVector3 electron, TVector3 neutron) {
 //		cout << "before " << p_e << endl;
 		e4.SetPxPyPzE(px_e, py_e, pz_e, E_e);
 		if(doSmearing) {
-			fSmear->smear(&e4, 0);
+			fCLAS->Smear(&e4, 0);
 		}
 		p_e = e4.Vect().Mag();
 //		cout << "after " << p_e << endl;
@@ -295,7 +294,7 @@ int Simulate::SimulateBackground(TVector3 electron, TVector3 neutron) {
 
 
 		// Check acceptance for electron, neutron
-		double acc_e = fFiducial->GetElectronAcceptance(theta_e, phi_e, p_e);
+		double acc_e = fCLAS->GetElectronAcceptance(theta_e, phi_e, p_e);
 		double acc_n = fBAND->GetNeutronAcceptance(theta_n, phi_n, p_n, vz);
 		double p2b = fBAND->PointsToBAND(theta_n, phi_n, vz);
 
