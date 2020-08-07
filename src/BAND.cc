@@ -5,6 +5,7 @@
 #include "TF1.h"
 #include "TH1F.h"
 #include "TFile.h"
+#include "TVector3.h"
 
 #include <math.h>
 
@@ -123,6 +124,22 @@ double BAND::PointsToBAND(double theta, double phi, double z_m) {
  	return 0.0;
 
 }
+
+
+TVector3 BAND::Smear(TVector3 p_n) {
+
+	double pmag_new = fRand->Gaus(p_n.Mag(), 0.);
+	double theta_new = fRand->Gaus(p_n.Theta(), 0.);
+	double phi_new = fRand->Gaus(p_n.Phi(), 0.);
+
+	double px_new = pmag_new*sin(theta_new)*cos(phi_new);
+	double py_new = pmag_new*sin(theta_new)*sin(phi_new);
+	double pz_new = pmag_new*cos(theta_new);
+
+	return TVector3(px_new, py_new, pz_new);
+
+}
+
 
 
 double BAND::GetEdep(double p_n) {

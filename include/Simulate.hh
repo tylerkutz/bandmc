@@ -14,7 +14,7 @@ class BAND;
 class Simulate{
 
 public:
-	Simulate(int, int);
+	Simulate(int);
 	~Simulate();
 	int SimulateEvent(TVector3, TVector3); 
 	int SimulateBackground(TVector3, TVector3); 
@@ -25,7 +25,6 @@ private:
 	int nSim;
 	int nBG;
 
-	int doRadiation;
 	int doSmearing;
 
 	double targetL;

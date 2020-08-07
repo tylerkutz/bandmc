@@ -3,6 +3,7 @@
 #include <cstdlib>
 
 #include "DISGenerator.hh"
+#include "Radiation.hh"
 
 #include "TFoam.h"
 #include "TFoamIntegrand.h"
@@ -60,7 +61,7 @@ double min_phi_r=M_PI;
 double max_phi_r=M_PI;
 */
 
-DISGenerator::DISGenerator() {
+DISGenerator::DISGenerator(int do_radiate) {
 
 	// Set external variables
 	if(offshellset==0) epsinput=-0.5;
@@ -71,6 +72,10 @@ DISGenerator::DISGenerator() {
 
 	fDIS = new disCS();
 //	SetDIS();
+
+	Radiation* rad = new Radiation();
+	fDIS->SetRadiation(rad);
+	fDIS->DoRadiate(do_radiate);
 
 	rand = new TRandom3(0);
 
@@ -215,7 +220,16 @@ double disCS::Density(int nDim, double *args){
 	else if( direction.Z() < 0 ){ // this means the phi_rq should be between -pi and 0
 		phi_rq *= (-1);
 	}
-	
+
+
+	double radweight = 0.0;
+	if (doRadiation) {
+		radweight = fRad->GetRadiativeCorrection(xB, Q2);
+	} else {
+		radweight = 1.0;
+	}
+
+//	cout << xB << "\t" << Q2 << "\t" << radweight << endl;
 
 	///////////////////////////////////////////////////////////////////////
 	// Create quantities for cross section input and jacobian
@@ -239,7 +253,7 @@ double disCS::Density(int nDim, double *args){
 		// and multiply by our integrating range
 	double differential_e = (max_theta_e - min_theta_e) * (2.*M_PI)		      * (max_p_e - min_p_e);		// [GeV]
 	double differential_p = (max_theta_r - min_theta_r) * (max_phi_r - min_phi_r) * (max_p_r - min_p_r);		// [GeV]
-	result = result * differential_e * differential_p;
+	result = result * differential_e * differential_p * radweight;
 
 	if ( result < 0. || result!=result) return 0.;
 	return result; 													// [nb]

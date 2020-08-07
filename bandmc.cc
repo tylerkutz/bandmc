@@ -34,9 +34,10 @@ int main(int argc, char *argv[]) {
 
 	IO* fIO = new IO(Form("bandmc_out_rad%i_smear%i.root", doRadiation, doSmearing));
 
-	DISGenerator* fDIS = new DISGenerator(); 
+	DISGenerator* fDIS = new DISGenerator(doRadiation); 
+
 	RandomGenerator* fBG = new RandomGenerator();
-	Simulate* fSim = new Simulate(doRadiation, doSmearing);
+	Simulate* fSim = new Simulate(doSmearing);
 
 	fSim->SetIO(fIO);
 

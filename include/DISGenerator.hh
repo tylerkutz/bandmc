@@ -6,6 +6,7 @@
 class TRandom3;
 class TFoam;
 class Gen_Event;
+class Radiation;
 
 // Foam Integrand
 class disCS : public TFoamIntegrand {
@@ -13,6 +14,12 @@ class disCS : public TFoamIntegrand {
 public:
 	double Density(int nDim, double * args);
 	virtual ~disCS() {};
+	inline void SetRadiation(Radiation* rad) {fRad = rad;};
+	inline void DoRadiate(int dr) {doRadiation = dr;};
+
+private:
+	Radiation* fRad;
+	int doRadiation;
 
 };
 
@@ -20,7 +27,7 @@ public:
 class DISGenerator {
 
 public:
-	DISGenerator();
+	DISGenerator(int);
 	~DISGenerator();
 
 	void GenerateEvent(Gen_Event*);

@@ -5,6 +5,7 @@ class TRandom3;
 class TF1;
 class TH1F;
 class TFile;
+class TVector3;
 
 class BAND{
 
@@ -15,6 +16,7 @@ public:
 	double PointsToBAND(double, double, double);
 	double Efficiency(double);
 	double GetEdep(double);
+	TVector3 Smear(TVector3);
 
 private:
 	TRandom3* fRand;	

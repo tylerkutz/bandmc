@@ -10,9 +10,8 @@
 #include <iostream>
 using namespace std;
 
-Simulate::Simulate(int do_radiate, int do_smear) {
+Simulate::Simulate(int do_smear) {
 
-	doRadiation = do_radiate;
 	doSmearing = do_smear;
 
 	fRad = new RadGen();
@@ -117,7 +116,7 @@ int Simulate::SimulateEvent(TVector3 electron, TVector3 neutron) {
 		Wp = sqrt(W_primeSq);
 		Xp = Q2/(2.*( nu*(MD-E_n) + p_n*q.Mag()*CosTheta_nq));
 		As = (E_n - p_n*CosTheta_nq)/Mn;
-
+/*
 		// Radiate photon
 		float vpgen[4] = {(float)q.x(), (float)q.y(), (float)q.z(), (float)nu};
 		float vprad[4];
@@ -136,12 +135,15 @@ int Simulate::SimulateEvent(TVector3 electron, TVector3 neutron) {
 			phi_q = q.Phi();			
 			radweight = weight;
 		}
+*/
+
 
 		// Smear detected electron
 //		cout << "before " << p_e << endl;
 		e4.SetPxPyPzE(px_e, py_e, pz_e, E_e);
 		if(doSmearing) {
 			fCLAS->Smear(&e4, 0);
+			TVector3 pn_smeared = fBAND->Smear(neutron);
 		}
 		p_e = e4.Vect().Mag();
 //		cout << "after " << p_e << endl;
@@ -256,6 +258,7 @@ int Simulate::SimulateBackground(TVector3 electron, TVector3 neutron) {
 		Xp = Q2/(2.*( nu*(MD-E_n) + p_n*q.Mag()*CosTheta_nq));
 		As = (E_n - p_n*CosTheta_nq)/Mn;
 
+		/*
 		// Radiate photon
 		float vpgen[4] = {(float)q.x(), (float)q.y(), (float)q.z(), (float)nu};
 		float vprad[4];
@@ -272,6 +275,8 @@ int Simulate::SimulateBackground(TVector3 electron, TVector3 neutron) {
 			theta_q = q.Theta();
 			phi_q = q.Phi();			
 		}
+		*/
+
 
 		// Smear detected electron
 //		cout << "before " << p_e << endl;
