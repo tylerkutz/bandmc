@@ -100,7 +100,7 @@ double CLAS::GetFiducialParameter(int boundary, int sector, int par, double pe) 
 }
 
 
-double CLAS::GetElectronAcceptance(double theta, double phi, double pe) {
+int CLAS::GetElectronAcceptance(double theta, double phi, double pe) {
 
 	SetFiducialParameters(pe);
 
@@ -110,7 +110,7 @@ double CLAS::GetElectronAcceptance(double theta, double phi, double pe) {
 		double minPhi = fiducialFunction[1][sector]->Eval(theta);
 
 		if (phi > minPhi && phi < maxPhi) {
-			return 1.;
+			return (sector + 1);
 		}
 	}
 
@@ -122,12 +122,12 @@ double CLAS::GetElectronAcceptance(double theta, double phi, double pe) {
                 double minPhi = fiducialFunction[1][sector]->Eval(theta);
 
                 if ((phi - 360.) > minPhi && (phi - 360.) < maxPhi) {
-                        return 1.;
+                        return (sector + 1);
                 }
         }
 
 
-	return 0.;
+	return -1;
 }
 
 

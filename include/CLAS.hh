@@ -13,7 +13,7 @@ public:
 	CLAS();
 	~CLAS();
 
-	double GetElectronAcceptance(double, double, double);
+	int GetElectronAcceptance(double, double, double);
 	void Smear(TLorentzVector *V4, int q); 
 	void SmearCD(TLorentzVector *V4, int q); 
 
