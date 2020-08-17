@@ -6,7 +6,6 @@
 class TVector3;
 class TRandom3;
 
-class RadGen;
 class IO;
 class CLAS;
 class BAND;
@@ -28,18 +27,18 @@ private:
 	int doSmearing;
 
 	double targetL;
+	double targetR;
 	double barThickness;
 	double zUp;
 	double zDown;
 
-	RadGen* fRad;
 	IO* fIO;	
 	CLAS* fCLAS;
 	BAND* fBAND;
 
 	TRandom3* fRand;
 
-	void SetData();
+	void SetEventData();
 
 	double Me;
 	double Mp;
@@ -52,6 +51,11 @@ private:
 
 	TLorentzVector e4;
 
+	double vx;
+	double vy;
+	double vz;
+
+	int sector_e;
 	double p_e; 		
 	double theta_e; 	
 	double phi_e;		
@@ -60,8 +64,6 @@ private:
 	double phi_n;		
 	double E_n;
 	double Q2;		
-	double Q2rad;		
-	double Q2true;		
 	double xB;		
 	double W2;		
 	double Ebeam;		
@@ -95,12 +97,13 @@ private:
 	double nBeta;
 	double nEdep;		
 	int bg;
+	double theta_nq;
+	double phi_nq;
 	double CosTheta_nq;
 	double Xp;
 	double Wp;
 	double As;
 
-	double radweight;
 
 };
 
