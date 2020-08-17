@@ -15,7 +15,14 @@ IO::IO(TString filename) {
 	
 	InitializeTree();
 
-	nMult = 1;
+	// These things will not change for each MC run or event
+	fRunNum = 1;
+	fEbeam = 10.6; // GeV
+	fGatedCharge = 1.;
+	fLivetime = 1.;
+	fStartTime = 0.;
+	fCurrent = 1.;
+	fnMult = 1;
 
 }
 
@@ -30,55 +37,17 @@ void IO::InitializeTree() {
 	
 	fTree->SetMaxTreeSize(1900000000);  // 1.9 GB
 
-	fTree->Branch("p_e",		&p_e, 		"p_e/D");	
-	fTree->Branch("theta_e",	&theta_e, 	"theta_e/D");	
-	fTree->Branch("phi_e",		&phi_e,		"phi_e/D");
-	fTree->Branch("p_n",		&p_n,		"p_n/D");
-	fTree->Branch("theta_n",	&theta_n,	"theta_n/D");
-	fTree->Branch("phi_n",		&phi_n,		"phi_n/D");
-	fTree->Branch("E_n",		&E_n,		"E_n/D");
-	fTree->Branch("nEdep",		&nEdep,		"nEdep/D");
-	fTree->Branch("Q2",		&Q2,		"Q2/D");
-	fTree->Branch("Q2rad",		&Q2rad,		"Q2rad/D");
-	fTree->Branch("Q2true",		&Q2true,	"Q2true/D");
-	fTree->Branch("radweight",	&radweight,	"radweight/D");
-	fTree->Branch("xB",		&xB,		"xB/D");		
-	fTree->Branch("W2",		&W2,		"W2/D");
-	fTree->Branch("Ebeam",		&Ebeam,		"Ebeam/D");
-	fTree->Branch("gated_charge",	&gated_charge,	"gated_charge/D");
-	fTree->Branch("livetime",	&livetime,	"livetime/D");
-	fTree->Branch("starttime",	&starttime,	"starttime/D");
-	fTree->Branch("ePid",		&ePid,		"ePid/I");
-	fTree->Branch("eCharge",	&eCharge,	"eCharge/D");
-	fTree->Branch("eStatus",	&eStatus,	"eStatus/I");
-	fTree->Branch("eTime",		&eTime,		"eTime/D");
-	fTree->Branch("eBeta",		&eBeta,		"eBeta/D");
-	fTree->Branch("eChi2pid",	&eChi2pid,	"eChi2pid");
-	fTree->Branch("E_tot",		&E_tot,		"E_tot/D");
-	fTree->Branch("E_pcal",		&E_pcal,	"E_pcal/D");
-	fTree->Branch("t_e",		&t_e,		"t_e/D");
-	fTree->Branch("dL_e",		&dL_e,		"dL_e/D");
-	fTree->Branch("lU",		&lU,		"lU/D");
-	fTree->Branch("lV",		&lV,		"lV/D");
-	fTree->Branch("lW",		&lW,		"lW/D");
-	fTree->Branch("e_vtx",		&e_vtx,		"e_vtx/D");
-	fTree->Branch("e_vty",		&e_vty,		"e_vty/D");
-	fTree->Branch("e_vtz",		&e_vtz,		"e_vtz/D");
-	fTree->Branch("q",		&q,		"q/D");
-	fTree->Branch("theta_q",	&theta_q,	"theta_q/D");
-	fTree->Branch("phi_q",		&phi_q,		"phi_q/D");
-	fTree->Branch("nu",		&nu,		"nu/D");
-	fTree->Branch("nMult",		&nMult,		"nMult/I");
-	fTree->Branch("barID",		&barID,		"barID/D");
-	fTree->Branch("dL_n",		&dL_n,		"dL_n/D");
-	fTree->Branch("nBeta",		&nBeta,		"nBeta/D");
-	fTree->Branch("nTime",		&nTime,		"nTime/D");
-	fTree->Branch("nEdep",		&nEdep,		"nEdep/D");
-	fTree->Branch("bg",		&bg,		"bg/I");
-	fTree->Branch("CosTheta_nq",	&CosTheta_nq,	"CosTheta_nq/D");
-	fTree->Branch("Xp",		&Xp,		"Xp/D");
-	fTree->Branch("Wp",		&Wp,		"Wp/D");
-	fTree->Branch("As",		&As,		"As/D");
+        fTree->Branch("Runno",         	&fRunNum);
+        fTree->Branch("Ebeam",         	&fEbeam);
+        fTree->Branch("gated_charge",  	&fGatedCharge);
+        fTree->Branch("livetime",      	&fLivetime);
+        fTree->Branch("starttime",     	&fStartTime);
+        fTree->Branch("current",       	&fCurrent);
+        fTree->Branch("nMult",         	&fnMult);
+        fTree->Branch("nHit",          	&fBANDHit);
+        fTree->Branch("eHit",         	&fCLASHit);
+        fTree->Branch("tag",         	&fTagHit);
+	fTree->Branch("bg",		&bg);
 
 
 }
@@ -107,56 +76,11 @@ void IO::WriteTree() {
 
 }
 
-void IO::ResetBranches() {
+void IO::ClearEvent() {
 
-	p_e = 0; 		
-	theta_e = 0; 	
-	phi_e = 0;		
-	p_n = 0;		
-	theta_n = 0;	
-	phi_n = 0;
-	E_n = 0;	
-	nEdep = 0.;
-	Q2 = 0;		
-	Q2rad = 0;		
-	Q2true = 0;
-	xB = 0;		
-	W2 = 0;		
-	Ebeam = 0;		
-	gated_charge = 0;	
-	livetime = 0;	
-	starttime = 0;	
-	ePid = 0;		
-	eCharge = 0;	
-	eStatus = 0;	
-	eTime = 0;		
-	eBeta = 0;		
-	eChi2pid = 0;	
-	E_tot = 0;		
-	E_pcal = 0;	
-	t_e = 0;		
-	dL_e = 0;		
-	lU = 0;		
-	lV = 0;		
-	lW = 0;		
-	e_vtx = 0;		
-	e_vty = 0;		
-	e_vtz = 0;		
-	q = 0;		
-	theta_q = 0;	
-	phi_q = 0;		
-	nu = 0;		
-	nMult = 0;		
-	barID = 0;		
-	dL_n = 0;		
-	nBeta = 0;
-	nTime = 0;		
-	nEdep = 0;		
+	fCLASHit.Clear();
+	fBANDHit.Clear();
+//	fTagHit.Clear();
 	bg = -1;
-	CosTheta_nq = 0;
-	Xp = 0;
-	Wp = 0;
-	As = 0;
-	radweight=0.;
 
 }
