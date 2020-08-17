@@ -16,7 +16,7 @@ public:
 	double PointsToBAND(double, double, double);
 	double Efficiency(double);
 	double GetEdep(double);
-	TVector3 Smear(TVector3);
+	void Smear(TVector3*);
 
 private:
 	TRandom3* fRand;	

@@ -126,17 +126,17 @@ double BAND::PointsToBAND(double theta, double phi, double z_m) {
 }
 
 
-TVector3 BAND::Smear(TVector3 p_n) {
+void BAND::Smear(TVector3* p_n) {
 
-	double pmag_new = fRand->Gaus(p_n.Mag(), 0.);
-	double theta_new = fRand->Gaus(p_n.Theta(), 0.);
-	double phi_new = fRand->Gaus(p_n.Phi(), 0.);
+	double pmag_new = fRand->Gaus(p_n->Mag(), 0.);
+	double theta_new = fRand->Gaus(p_n->Theta(), 0.);
+	double phi_new = fRand->Gaus(p_n->Phi(), 0.);
 
 	double px_new = pmag_new*sin(theta_new)*cos(phi_new);
 	double py_new = pmag_new*sin(theta_new)*sin(phi_new);
 	double pz_new = pmag_new*cos(theta_new);
 
-	return TVector3(px_new, py_new, pz_new);
+	p_n->SetXYZ(px_new, py_new, pz_new);
 
 }
 
