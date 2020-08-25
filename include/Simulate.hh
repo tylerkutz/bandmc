@@ -13,7 +13,7 @@ class BAND;
 class Simulate{
 
 public:
-	Simulate(int);
+	Simulate(int, bool);
 	~Simulate();
 	int SimulateEvent(TVector3, TVector3); 
 	int SimulateBackground(TVector3, TVector3); 
@@ -24,7 +24,8 @@ private:
 	int nSim;
 	int nBG;
 
-	int doSmearing;
+	bool doSmearing;
+	bool isInclusive;
 
 	double targetL;
 	double targetR;

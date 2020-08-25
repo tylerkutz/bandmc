@@ -10,9 +10,10 @@
 #include <iostream>
 using namespace std;
 
-Simulate::Simulate(int do_smear) {
+Simulate::Simulate(int do_smear, bool inclusive = false) {
 
 	doSmearing = do_smear;
+	isInclusive = inclusive;
 
 	fCLAS = new CLAS();
 	fBAND = new BAND();
@@ -133,8 +134,7 @@ int Simulate::SimulateEvent(TVector3 electron, TVector3 neutron) {
 		sector_e = fCLAS->GetElectronAcceptance(theta_e, phi_e, p_e);
 		double acc_n = fBAND->GetNeutronAcceptance(theta_n, phi_n, p_n, vz);
 
-		if (sector_e > 0 && acc_n > 0.5) {
-
+		if (sector_e > 0 && (acc_n > 0.5 || isInclusive) ) {
 
 			SetEventData();
 			fIO->FillTree();
