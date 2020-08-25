@@ -29,6 +29,9 @@ ROOT_GENERATE_DICTIONARY(
 add_executable(bandmc bandmc.cc ${headers} ${sources} bandmcDict.cxx)
 target_link_libraries(bandmc ${ROOT_LIBRARIES} Foam ${BAND_LIBS})
 
+add_executable(wimgen wimgen.cc ${headers} ${sources} bandmcDict.cxx)
+target_link_libraries(wimgen ${ROOT_LIBRARIES} Foam ${BAND_LIBS})
+
 set(DAT_FILES dat/upper_momentum_fit.dat dat/lower_momentum_fit.dat dat/a09.dsfs_lNNC dat/a09.sfs_lNNC dat/edep_dist.root dat/RC_graph.root)
 
 foreach(_datfile ${DAT_FILES})
