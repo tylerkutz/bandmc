@@ -13,9 +13,9 @@ class BAND;
 class Simulate{
 
 public:
-	Simulate(int, bool);
+	Simulate(bool, bool);
 	~Simulate();
-	int SimulateEvent(TVector3, TVector3); 
+	int SimulateEvent(TVector3, TVector3, double); 
 	int SimulateBackground(TVector3, TVector3); 
 	void SetIO(IO* io) {fIO = io;}
 
@@ -41,6 +41,10 @@ private:
 
 	void SetEventData();
 
+	TVector3 momentumE;
+	TVector3 momentumN;
+	TVector3 momentumQ;
+
 	double Me;
 	double Mp;
 	double Mn;
@@ -64,6 +68,9 @@ private:
 	double theta_n;	
 	double phi_n;		
 	double E_n;
+	double X_n;
+	double Y_n;
+	double Z_n;
 	double Q2;		
 	double xB;		
 	double W2;		
@@ -98,6 +105,7 @@ private:
 	double nBeta;
 	double nEdep;		
 	int bg;
+	double radweight;
 	double theta_nq;
 	double phi_nq;
 	double CosTheta_nq;

@@ -5,6 +5,8 @@
 #include "bandhit.h"
 #include "taghit.h"
 
+#include "TClonesArray.h"
+
 class TFile;
 class TTree;
 
@@ -26,9 +28,14 @@ public:
         double fCurrent;     
         //      Neutron info:
         int fnMult;              
-        bandhit fBANDHit;
+//	bandhit fBANDHit;
+//	taghit fTagHit;
+	TClonesArray* fBANDHit = new TClonesArray("bandhit");
+        TClonesArray &saveHit = *fBANDHit;
+	TClonesArray* fTagHit = new TClonesArray("taghit");
+        TClonesArray &saveTag = *fTagHit;
 	clashit fCLASHit;
-	taghit fTagHit;
+	double radweight;
 	int bg;
 
 private:

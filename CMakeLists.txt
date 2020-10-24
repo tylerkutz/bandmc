@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 project(bandmc)
 
-set(CMAKE_CXX_FLAGS "-std=c++11")
+set(CMAKE_CXX_FLAGS "-std=c++11 -ggdb -O0")
 
 enable_language(Fortran)
 

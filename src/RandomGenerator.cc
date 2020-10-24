@@ -37,15 +37,20 @@ RandomGenerator::RandomGenerator() {
 	inclFile = new TFile("dat/inclusive_sample_background.root");
 	inclTree = (TTree*)inclFile->Get("T");
 
-	inclTree->SetBranchAddress("p_e", 	&p_e);
-	inclTree->SetBranchAddress("theta_e", 	&theta_e);
-	inclTree->SetBranchAddress("phi_e",	&phi_e);
+	inclTree->SetBranchAddress("pe", pe);
+
+//	inclTree->SetBranchAddress("p_e", 	&p_e);
+//	inclTree->SetBranchAddress("theta_e", 	&theta_e);
+//	inclTree->SetBranchAddress("phi_e",	&phi_e);
 
 	nBGSamp = inclTree->GetEntries();
 
 	nBG = 0; 
 
-	step = fRand->Integer(100);
+	step = fRand->Integer(500);
+	while(nBGSamp%step == 0) {
+		step = fRand->Integer(500);
+	}
 
 }
 
@@ -71,7 +76,8 @@ void RandomGenerator::GenerateRandom(Gen_Event* thisEvent) {
 	// Electron info
 	Gen_Particle electron;
 	electron.type="electron";
-	electron.momentum.SetMagThetaPhi(p_e, theta_e, phi_e);
+	electron.momentum.SetXYZ(pe[0], pe[1], pe[2]);
+	//electron.momentum.SetMagThetaPhi(p_e, theta_e, phi_e);
 	thisEvent->particles.push_back(electron);
 
 	// Neutron info

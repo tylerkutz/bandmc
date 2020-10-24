@@ -4,6 +4,7 @@
 #include "TFile.h"
 #include "TTree.h"
 #include "TVector3.h"
+#include "TClonesArray.h"
 
 #include <unistd.h>
 
@@ -12,8 +13,6 @@ using namespace std;
 IO::IO(TString filename) {
 
 	fFile = new TFile(filename, "RECREATE");
-	
-	InitializeTree();
 
 	// These things will not change for each MC run or event
 	fRunNum = 1;
@@ -23,6 +22,8 @@ IO::IO(TString filename) {
 	fStartTime = 0.;
 	fCurrent = 1.;
 	fnMult = 1;
+
+	InitializeTree();
 
 }
 
@@ -44,11 +45,11 @@ void IO::InitializeTree() {
         fTree->Branch("starttime",     	&fStartTime);
         fTree->Branch("current",       	&fCurrent);
         fTree->Branch("nMult",         	&fnMult);
-        fTree->Branch("nHit",          	&fBANDHit);
+        fTree->Branch("nHits",          &fBANDHit);
         fTree->Branch("eHit",         	&fCLASHit);
         fTree->Branch("tag",         	&fTagHit);
 	fTree->Branch("bg",		&bg);
-
+	fTree->Branch("radweight",	&radweight);
 
 }
 
@@ -79,8 +80,9 @@ void IO::WriteTree() {
 void IO::ClearEvent() {
 
 	fCLASHit.Clear();
-	fBANDHit.Clear();
-//	fTagHit.Clear();
+	fBANDHit->Clear();
+	fTagHit->Clear();
 	bg = -1;
+	radweight = 1.;
 
 }

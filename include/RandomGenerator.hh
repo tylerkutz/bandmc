@@ -45,9 +45,10 @@ private:
 	TFile* inclFile;
 	TTree* inclTree;
 
-	double p_e;
-	double theta_e;
-	double phi_e;
+	double pe[3];
+//	double p_e;
+//	double theta_e;
+//	double phi_e;
 
 	int nBGSamp;
 	int nBG;

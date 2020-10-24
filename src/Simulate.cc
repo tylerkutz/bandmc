@@ -10,7 +10,7 @@
 #include <iostream>
 using namespace std;
 
-Simulate::Simulate(int do_smear, bool inclusive = false) {
+Simulate::Simulate(bool do_smear, bool inclusive = false) {
 
 	doSmearing = do_smear;
 	isInclusive = inclusive;
@@ -51,16 +51,17 @@ Simulate::~Simulate() {
 
 }
 
-int Simulate::SimulateEvent(TVector3 electron, TVector3 neutron) {
+int Simulate::SimulateEvent(TVector3 electron, TVector3 neutron, double radiation) {
 
 		fIO->ClearEvent();
 		
 		bg = 0;
+		radweight = radiation;
 
 		// Vertex
 		vx = fRand->Uniform(targetR) * cos(fRand->Uniform(360.*TMath::DegToRad()));
 		vy = fRand->Uniform(targetR) * sin(fRand->Uniform(360.*TMath::DegToRad()));
-		vz = fRand->Uniform(-targetL/2., targetL/2.);
+		vz = fRand->Uniform(-8., 3.);
 
 		// Create Lorentz vector required for electron smearing
 		double px_e = electron.x();
@@ -97,6 +98,9 @@ int Simulate::SimulateEvent(TVector3 electron, TVector3 neutron) {
 		dL_n = dZ_n/cos(neutron.Theta()); 	
 		nTime = 1.e9*(dL_n/100.)/nv;		// convert dL_n to meters first, give time in ns 
 		nEdep = fBAND->GetEdep(p_n);
+		X_n = dL_n * sin(neutron.Theta() ) * cos(neutron.Phi() );
+		Y_n = dL_n * sin(neutron.Theta() ) * sin(neutron.Phi() );
+		Z_n = dL_n * cos(neutron.Theta() );
 
 		// Photon variables
 		TVector3 k0 = TVector3(0.,0.,sqrt(eBeam*eBeam - Me*Me));
@@ -130,6 +134,11 @@ int Simulate::SimulateEvent(TVector3 electron, TVector3 neutron) {
 		Xp = Q2/(2.*( nu*(MD-E_n) + p_n*q.Mag()*CosTheta_nq));
 		As = (E_n - p_n*CosTheta_nq)/Mn;
 
+		// Momentum vectors
+		momentumE = e4.Vect();
+		momentumN = neutron;
+		momentumQ = q;
+
 		// Check acceptance for electron, neutron
 		sector_e = fCLAS->GetElectronAcceptance(theta_e, phi_e, p_e);
 		double acc_n = fBAND->GetNeutronAcceptance(theta_n, phi_n, p_n, vz);
@@ -155,7 +164,7 @@ int Simulate::SimulateBackground(TVector3 electron, TVector3 neutron) {
 		// Vertex
 		vx = fRand->Uniform(targetR) * cos(fRand->Uniform(360.*TMath::DegToRad()));
 		vy = fRand->Uniform(targetR) * sin(fRand->Uniform(360.*TMath::DegToRad()));
-		vz = fRand->Uniform(-targetL/2., targetL/2.);
+		vz = fRand->Uniform(-8., 3.);
 
 		// Create Lorentz vector required for electron smearing
 		double px_e = electron.x();
@@ -193,6 +202,9 @@ int Simulate::SimulateBackground(TVector3 electron, TVector3 neutron) {
 		nBeta = (dL_n/100.)/(c*nTime*1.e-9);
 		p_n = Mn / sqrt( 1./pow(nBeta,2) - 1. );
 		E_n = sqrt(Mn*Mn + p_n*p_n );
+		X_n = dL_n * sin(neutron.Theta() ) * cos(neutron.Phi() );
+		Y_n = dL_n * sin(neutron.Theta() ) * sin(neutron.Phi() );
+		Z_n = dL_n * cos(neutron.Theta() );
 
 		// Photon variables
 		TVector3 k0 = TVector3(0.,0.,sqrt(eBeam*eBeam - Me*Me));
@@ -225,6 +237,11 @@ int Simulate::SimulateBackground(TVector3 electron, TVector3 neutron) {
 		Wp = sqrt(W_primeSq);
 		Xp = Q2/(2.*( nu*(MD-E_n) + p_n*q.Mag()*CosTheta_nq));
 		As = (E_n - p_n*CosTheta_nq)/Mn;
+	
+		// Momentum vectors
+		momentumE = e4.Vect();
+		momentumN = neutron;
+		momentumQ = q;
 
 		// Check acceptance for electron, neutron
 		sector_e = fCLAS->GetElectronAcceptance(theta_e, phi_e, p_e);
@@ -245,76 +262,115 @@ int Simulate::SimulateBackground(TVector3 electron, TVector3 neutron) {
 
 void Simulate::SetEventData() {
 
+	//////////////
+	// Electron //
+	//////////////
+
+	// Used in analysis: simulated values
+	fIO->fCLASHit.setPID(11);		
+	fIO->fCLASHit.setCharge(-1);
+	fIO->fCLASHit.setEpcal(E_e);
+	fIO->fCLASHit.setVtz(vz);
+	fIO->fCLASHit.setQ2(Q2);
+
+	// Used in analysis: dummy values
+	fIO->fCLASHit.setEoP(0.2);
+	fIO->fCLASHit.setU(16);
+	fIO->fCLASHit.setV(16);
+	fIO->fCLASHit.setW(16);
+	
+	// Not used in analysis
 	fIO->fCLASHit.setSector(sector_e);
-	fIO->fCLASHit.setPID(11);
-	fIO->fCLASHit.setCharge(-1.);
 	fIO->fCLASHit.setStatus(1);
 	fIO->fCLASHit.setTime(0.);
 	fIO->fCLASHit.setBeta(eBeta);
 	fIO->fCLASHit.setChi2(1.);
 	fIO->fCLASHit.setEtot(E_e);
-	fIO->fCLASHit.setEpcal(E_e);
-	fIO->fCLASHit.setEoP(1);
 	fIO->fCLASHit.setTimeScint(1);
 	fIO->fCLASHit.setPathScint(1);
-	fIO->fCLASHit.setU(1);
-	fIO->fCLASHit.setV(1);
-	fIO->fCLASHit.setQ(1);
 	fIO->fCLASHit.setVtx(vx);
 	fIO->fCLASHit.setVty(vy);
-	fIO->fCLASHit.setVtz(vz);
 	fIO->fCLASHit.setMomentum(p_e);
-	fIO->fCLASHit.setTheta(theta_e);
-	fIO->fCLASHit.setPhi(phi_e);
+	fIO->fCLASHit.setTheta(theta_e*TMath::DegToRad());
+	fIO->fCLASHit.setPhi(phi_e*TMath::DegToRad());
 	fIO->fCLASHit.setQ(0);
 	fIO->fCLASHit.setThetaQ(0);
 	fIO->fCLASHit.setPhiQ(0);
-	fIO->fCLASHit.setQ2(Q2);
 	fIO->fCLASHit.setOmega(nu);
 	fIO->fCLASHit.setXb(xB);
 	fIO->fCLASHit.setW2(W2);
 
-	fIO->fBANDHit.setSector(0);
-	fIO->fBANDHit.setLayer(0);
-	fIO->fBANDHit.setComponent(0);
-	fIO->fBANDHit.setBarID(0);
-	fIO->fBANDHit.setEdep(nEdep);
-	fIO->fBANDHit.setTof(nTime);
-	fIO->fBANDHit.setTofFadc(nTime);
-	fIO->fBANDHit.setTdiff(nTime);
-	fIO->fBANDHit.setTdiffFadc(nTime);
-	fIO->fBANDHit.setX(0);
-	fIO->fBANDHit.setY(0);
-	fIO->fBANDHit.setZ(0);
-	fIO->fBANDHit.setStatus(1);
-	fIO->fBANDHit.setRawLtdc(1);		
-	fIO->fBANDHit.setRawRtdc(1);		
-	fIO->fBANDHit.setRawLtdccorr(1);	
-	fIO->fBANDHit.setRawRtdccorr(1);	
-	fIO->fBANDHit.setRawLtfadc(1);	
-	fIO->fBANDHit.setRawRtfadc(1);	
-	fIO->fBANDHit.setRawLamp(1);		
-	fIO->fBANDHit.setRawRamp(1);		
-	fIO->fBANDHit.setRawLadc(1);		
-	fIO->fBANDHit.setRawRadc(1);		
-	fIO->fBANDHit.setPmtLtdc(1);		
-	fIO->fBANDHit.setPmtRtdc(1);		
-	fIO->fBANDHit.setPmtLtfadc(1);	
-	fIO->fBANDHit.setPmtRtfadc(1);	
-	fIO->fBANDHit.setPmtLamp(1);		
-	fIO->fBANDHit.setPmtRamp(1);		
-	fIO->fBANDHit.setPmtLadc(1);		
-	fIO->fBANDHit.setPmtRadc(1);		
-	fIO->fBANDHit.setPmtLped(1);		
-	fIO->fBANDHit.setPmtRped(1);		
+	/////////////
+	// Neutron //
+	/////////////
 
-	fIO->fTagHit.setThetaNQ(theta_nq);
-	fIO->fTagHit.setPhiNQ(phi_nq);
-	fIO->fTagHit.setWp(Wp);
-	fIO->fTagHit.setXp(Xp);
-	fIO->fTagHit.setAs(As);
+	bandhit* thisBANDHit;
 
+	// Used in analysis: simulated values
+	thisBANDHit->setTof(nTime);
+	thisBANDHit->setX(X_n);
+	thisBANDHit->setY(Y_n);
+	thisBANDHit->setZ(Z_n);
+
+	// Used in analysis: dummy values
+	fIO->fnMult = 1;
+	thisBANDHit->setStatus(0);
+	thisBANDHit->setEdep(12000.); 
+	
+	// Not used in analysis
+	thisBANDHit->setSector(0);
+	thisBANDHit->setLayer(0);
+	thisBANDHit->setComponent(0);
+	thisBANDHit->setBarID(0);
+	thisBANDHit->setTofFadc(nTime);
+	thisBANDHit->setTdiff(nTime);
+	thisBANDHit->setTdiffFadc(nTime);
+	thisBANDHit->setRawLtdc(1);		
+	thisBANDHit->setRawRtdc(1);		
+	thisBANDHit->setRawLtdccorr(1);	
+	thisBANDHit->setRawRtdccorr(1);	
+	thisBANDHit->setRawLtfadc(1);	
+	thisBANDHit->setRawRtfadc(1);	
+	thisBANDHit->setRawLamp(1);		
+	thisBANDHit->setRawRamp(1);		
+	thisBANDHit->setRawLadc(1);		
+	thisBANDHit->setRawRadc(1);		
+	thisBANDHit->setPmtLtdc(1);		
+	thisBANDHit->setPmtRtdc(1);		
+	thisBANDHit->setPmtLtfadc(1);	
+	thisBANDHit->setPmtRtfadc(1);	
+	thisBANDHit->setPmtLamp(1);		
+	thisBANDHit->setPmtRamp(1);		
+	thisBANDHit->setPmtLadc(1);		
+	thisBANDHit->setPmtRadc(1);		
+	thisBANDHit->setPmtLped(1);		
+	thisBANDHit->setPmtRped(1);		
+
+	new(fIO->saveHit[0]) bandhit;
+	fIO->saveHit[0] = thisBANDHit;
+
+	/////////
+	// Tag //
+	/////////
+	
+	taghit* thisTagHit;
+
+	thisTagHit->setThetaNQ(theta_nq);
+	thisTagHit->setPhiNQ(phi_nq);
+	thisTagHit->setWp(Wp);
+	thisTagHit->setXp(Xp);
+	thisTagHit->setAs(As);
+
+	thisTagHit->setMomentumE(momentumE);
+	thisTagHit->setMomentumN(momentumN);
+	thisTagHit->setMomentumQ(momentumQ);
+
+	new(fIO->saveTag[0]) taghit;
+	fIO->saveTag[0] = thisTagHit;
+
+	// Misc.
 	fIO->bg = bg;
+	fIO->radweight = radweight;
 
 }
 
