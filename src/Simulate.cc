@@ -3,6 +3,10 @@
 #include "CLAS.hh"
 #include "BAND.hh"
 
+#include "clashit.h"
+#include "bandhit.h"
+#include "taghit.h"
+
 #include "TVector3.h"
 #include "TRandom3.h"
 
@@ -304,69 +308,69 @@ void Simulate::SetEventData() {
 	// Neutron //
 	/////////////
 
-	bandhit* thisBANDHit;
+	bandhit thisBANDHit;
 
 	// Used in analysis: simulated values
-	thisBANDHit->setTof(nTime);
-	thisBANDHit->setX(X_n);
-	thisBANDHit->setY(Y_n);
-	thisBANDHit->setZ(Z_n);
+	thisBANDHit.setTof(nTime);
+	thisBANDHit.setX(X_n);
+	thisBANDHit.setY(Y_n);
+	thisBANDHit.setZ(Z_n);
 
 	// Used in analysis: dummy values
 	fIO->fnMult = 1;
-	thisBANDHit->setStatus(0);
-	thisBANDHit->setEdep(12000.); 
+	thisBANDHit.setStatus(0);
+	thisBANDHit.setEdep(12000.); 
 	
 	// Not used in analysis
-	thisBANDHit->setSector(0);
-	thisBANDHit->setLayer(0);
-	thisBANDHit->setComponent(0);
-	thisBANDHit->setBarID(0);
-	thisBANDHit->setTofFadc(nTime);
-	thisBANDHit->setTdiff(nTime);
-	thisBANDHit->setTdiffFadc(nTime);
-	thisBANDHit->setRawLtdc(1);		
-	thisBANDHit->setRawRtdc(1);		
-	thisBANDHit->setRawLtdccorr(1);	
-	thisBANDHit->setRawRtdccorr(1);	
-	thisBANDHit->setRawLtfadc(1);	
-	thisBANDHit->setRawRtfadc(1);	
-	thisBANDHit->setRawLamp(1);		
-	thisBANDHit->setRawRamp(1);		
-	thisBANDHit->setRawLadc(1);		
-	thisBANDHit->setRawRadc(1);		
-	thisBANDHit->setPmtLtdc(1);		
-	thisBANDHit->setPmtRtdc(1);		
-	thisBANDHit->setPmtLtfadc(1);	
-	thisBANDHit->setPmtRtfadc(1);	
-	thisBANDHit->setPmtLamp(1);		
-	thisBANDHit->setPmtRamp(1);		
-	thisBANDHit->setPmtLadc(1);		
-	thisBANDHit->setPmtRadc(1);		
-	thisBANDHit->setPmtLped(1);		
-	thisBANDHit->setPmtRped(1);		
+	thisBANDHit.setSector(0);
+	thisBANDHit.setLayer(0);
+	thisBANDHit.setComponent(0);
+	thisBANDHit.setBarID(0);
+	thisBANDHit.setTofFadc(nTime);
+	thisBANDHit.setTdiff(nTime);
+	thisBANDHit.setTdiffFadc(nTime);
+	thisBANDHit.setRawLtdc(1);		
+	thisBANDHit.setRawRtdc(1);		
+	thisBANDHit.setRawLtdccorr(1);	
+	thisBANDHit.setRawRtdccorr(1);	
+	thisBANDHit.setRawLtfadc(1);	
+	thisBANDHit.setRawRtfadc(1);	
+	thisBANDHit.setRawLamp(1);		
+	thisBANDHit.setRawRamp(1);		
+	thisBANDHit.setRawLadc(1);		
+	thisBANDHit.setRawRadc(1);		
+	thisBANDHit.setPmtLtdc(1);		
+	thisBANDHit.setPmtRtdc(1);		
+	thisBANDHit.setPmtLtfadc(1);	
+	thisBANDHit.setPmtRtfadc(1);	
+	thisBANDHit.setPmtLamp(1);		
+	thisBANDHit.setPmtRamp(1);		
+	thisBANDHit.setPmtLadc(1);		
+	thisBANDHit.setPmtRadc(1);		
+	thisBANDHit.setPmtLped(1);		
+	thisBANDHit.setPmtRped(1);		
 
 	new(fIO->saveHit[0]) bandhit;
-	fIO->saveHit[0] = thisBANDHit;
+	fIO->saveHit[0] = &thisBANDHit;
 
 	/////////
 	// Tag //
 	/////////
 	
-	taghit* thisTagHit;
+	taghit thisTagHit;
 
-	thisTagHit->setThetaNQ(theta_nq);
-	thisTagHit->setPhiNQ(phi_nq);
-	thisTagHit->setWp(Wp);
-	thisTagHit->setXp(Xp);
-	thisTagHit->setAs(As);
+	thisTagHit.setThetaNQ(theta_nq);
+	thisTagHit.setPhiNQ(phi_nq);
+	thisTagHit.setWp(Wp);
+	thisTagHit.setXp(Xp);
+	thisTagHit.setAs(As);
 
-	thisTagHit->setMomentumE(momentumE);
-	thisTagHit->setMomentumN(momentumN);
-	thisTagHit->setMomentumQ(momentumQ);
+	thisTagHit.setMomentumE(momentumE);
+	thisTagHit.setMomentumN(momentumN);
+	thisTagHit.setMomentumQ(momentumQ);
 
 	new(fIO->saveTag[0]) taghit;
-	fIO->saveTag[0] = thisTagHit;
+	fIO->saveTag[0] = &thisTagHit;
 
 	// Misc.
 	fIO->bg = bg;
