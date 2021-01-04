@@ -17,7 +17,10 @@ BAND::BAND() {
 
 	fRand = new TRandom3(0);
 
-	nEffFunc = new TF1("nEffFunc", "2.5*pol6", 0.1, 0.65);
+	// BAND efficiency as function of neutron momentum
+	// Rejection sampling used to determine if neutron is accepted
+	// Efficiency function normalized to have maximum value of 1
+	nEffFunc = new TF1("nEffFunc", "2.7379590*pol6", 0.1, 0.65);
 	double funcPars[] = {	-1.33158116e+00,
 				2.59593847e+01, 
 				-1.81677059e+02,  
