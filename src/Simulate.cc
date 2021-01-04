@@ -3,10 +3,6 @@
 #include "CLAS.hh"
 #include "BAND.hh"
 
-#include "clashit.h"
-#include "bandhit.h"
-#include "taghit.h"
-
 #include "TVector3.h"
 #include "TRandom3.h"
 
@@ -133,7 +129,7 @@ int Simulate::SimulateEvent(TVector3 electron, TVector3 neutron, double radiatio
 		// Remaining kinematic variables
 		xB = Q2/(2*Mp*nu);
 		W2 =  Mp*Mp + 2.*nu*Mp - Q2;
-		double W_primeSq = MD*MD - Q2 + Mn*Mn + 2.*MD*(nu-E_n) - 2.*nu*E_n + 2.*q.Mag()*p_n*cos(theta_nq);
+		double W_primeSq = MD*MD - Q2 + Mn*Mn + 2.*nu*(MD-E_n) - 2.*nu*E_n + 2.*q.Mag()*p_n*cos(theta_nq);
 		Wp = sqrt(W_primeSq);
 		Xp = Q2/(2.*( nu*(MD-E_n) + p_n*q.Mag()*CosTheta_nq));
 		As = (E_n - p_n*CosTheta_nq)/Mn;
@@ -146,8 +142,9 @@ int Simulate::SimulateEvent(TVector3 electron, TVector3 neutron, double radiatio
 		// Check acceptance for electron, neutron
 		sector_e = fCLAS->GetElectronAcceptance(theta_e, phi_e, p_e);
 		double acc_n = fBAND->GetNeutronAcceptance(theta_n, phi_n, p_n, vz);
+		double samp_n = fRand->Uniform(0.,1.);
 
-		if (sector_e > 0 && (acc_n > 0.5 || isInclusive) ) {
+		if (sector_e > 0 && (samp_n <= acc_n || isInclusive) ) {
 
 			SetEventData();
 			fIO->FillTree();
@@ -308,69 +305,59 @@ void Simulate::SetEventData() {
 	// Neutron //
 	/////////////
 
-	bandhit thisBANDHit;
-
 	// Used in analysis: simulated values
-	thisBANDHit.setTof(nTime);
-	thisBANDHit.setX(X_n);
-	thisBANDHit.setY(Y_n);
-	thisBANDHit.setZ(Z_n);
+	fIO->fBANDHit.setTof(nTime);
+	fIO->fBANDHit.setX(X_n);
+	fIO->fBANDHit.setY(Y_n);
+	fIO->fBANDHit.setZ(Z_n);
 
 	// Used in analysis: dummy values
 	fIO->fnMult = 1;
-	thisBANDHit.setStatus(0);
-	thisBANDHit.setEdep(12000.); 
+	fIO->fBANDHit.setStatus(0);
+	fIO->fBANDHit.setEdep(12000.); 
 	
 	// Not used in analysis
-	thisBANDHit.setSector(0);
-	thisBANDHit.setLayer(0);
-	thisBANDHit.setComponent(0);
-	thisBANDHit.setBarID(0);
-	thisBANDHit.setTofFadc(nTime);
-	thisBANDHit.setTdiff(nTime);
-	thisBANDHit.setTdiffFadc(nTime);
-	thisBANDHit.setRawLtdc(1);		
-	thisBANDHit.setRawRtdc(1);		
-	thisBANDHit.setRawLtdccorr(1);	
-	thisBANDHit.setRawRtdccorr(1);	
-	thisBANDHit.setRawLtfadc(1);	
-	thisBANDHit.setRawRtfadc(1);	
-	thisBANDHit.setRawLamp(1);		
-	thisBANDHit.setRawRamp(1);		
-	thisBANDHit.setRawLadc(1);		
-	thisBANDHit.setRawRadc(1);		
-	thisBANDHit.setPmtLtdc(1);		
-	thisBANDHit.setPmtRtdc(1);		
-	thisBANDHit.setPmtLtfadc(1);	
-	thisBANDHit.setPmtRtfadc(1);	
-	thisBANDHit.setPmtLamp(1);		
-	thisBANDHit.setPmtRamp(1);		
-	thisBANDHit.setPmtLadc(1);		
-	thisBANDHit.setPmtRadc(1);		
-	thisBANDHit.setPmtLped(1);		
-	thisBANDHit.setPmtRped(1);		
-
-	new(fIO->saveHit[0]) bandhit;
-	fIO->saveHit[0] = &thisBANDHit;
+	fIO->fBANDHit.setSector(0);
+	fIO->fBANDHit.setLayer(0);
+	fIO->fBANDHit.setComponent(0);
+	fIO->fBANDHit.setBarID(0);
+	fIO->fBANDHit.setTofFadc(nTime);
+	fIO->fBANDHit.setTdiff(nTime);
+	fIO->fBANDHit.setTdiffFadc(nTime);
+	fIO->fBANDHit.setRawLtdc(1);		
+	fIO->fBANDHit.setRawRtdc(1);		
+	fIO->fBANDHit.setRawLtdccorr(1);	
+	fIO->fBANDHit.setRawRtdccorr(1);	
+	fIO->fBANDHit.setRawLtfadc(1);	
+	fIO->fBANDHit.setRawRtfadc(1);	
+	fIO->fBANDHit.setRawLamp(1);		
+	fIO->fBANDHit.setRawRamp(1);		
+	fIO->fBANDHit.setRawLadc(1);		
+	fIO->fBANDHit.setRawRadc(1);		
+	fIO->fBANDHit.setPmtLtdc(1);		
+	fIO->fBANDHit.setPmtRtdc(1);		
+	fIO->fBANDHit.setPmtLtfadc(1);	
+	fIO->fBANDHit.setPmtRtfadc(1);	
+	fIO->fBANDHit.setPmtLamp(1);		
+	fIO->fBANDHit.setPmtRamp(1);		
+	fIO->fBANDHit.setPmtLadc(1);		
+	fIO->fBANDHit.setPmtRadc(1);		
+	fIO->fBANDHit.setPmtLped(1);		
+	fIO->fBANDHit.setPmtRped(1);		
 
 	/////////
 	// Tag //
 	/////////
 	
-	taghit thisTagHit;
+	fIO->fTagHit.setThetaNQ(theta_nq);
+	fIO->fTagHit.setPhiNQ(phi_nq);
+	fIO->fTagHit.setWp(Wp);
+	fIO->fTagHit.setXp(Xp);
+	fIO->fTagHit.setAs(As);
 
-	thisTagHit.setThetaNQ(theta_nq);
-	thisTagHit.setPhiNQ(phi_nq);
-	thisTagHit.setWp(Wp);
-	thisTagHit.setXp(Xp);
-	thisTagHit.setAs(As);
-
-	thisTagHit.setMomentumE(momentumE);
-	thisTagHit.setMomentumN(momentumN);
-	thisTagHit.setMomentumQ(momentumQ);
-
-	new(fIO->saveTag[0]) taghit;
-	fIO->saveTag[0] = &thisTagHit;
+	fIO->fTagHit.setMomentumE(momentumE);
+	fIO->fTagHit.setMomentumN(momentumN);
+	fIO->fTagHit.setMomentumQ(momentumQ);
 
 	// Misc.
 	fIO->bg = bg;

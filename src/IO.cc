@@ -4,7 +4,6 @@
 #include "TFile.h"
 #include "TTree.h"
 #include "TVector3.h"
-#include "TClonesArray.h"
 
 #include <unistd.h>
 
@@ -80,8 +79,8 @@ void IO::WriteTree() {
 void IO::ClearEvent() {
 
 	fCLASHit.Clear();
-	fBANDHit->Clear();
-	fTagHit->Clear();
+	fBANDHit.Clear();
+	fTagHit.Clear();
 	bg = -1;
 	radweight = 1.;
 
